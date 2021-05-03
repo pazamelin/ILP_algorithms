@@ -3,6 +3,7 @@
 
 #include "ilp_task.hpp"
 #include "digraph.hpp"
+#include "detail/dynamic_table.hpp"
 
 #include <boost/graph/adjacency_list.hpp>
 #include <boost/graph/adj_list_serialize.hpp>
@@ -11,7 +12,13 @@
 
 namespace ilp
 {
-    struct dynamic_table_t;
+    int_t compute_H(const matrix<int_t>& A);
+
+    int_t compute_K(const ilp_task& ilpTask);
+
+    bool dynamic_table_condition(const cvector<int_t>& b_cut,
+                                 const cvector <int_t>& p,
+                                 int_t bound);
 
 	struct JRDigraph : public DigraphAdaptor
 	{
@@ -26,65 +33,13 @@ namespace ilp
 
         void populate_graph() override;
 
-        dynamic_table_t table;
+        detail::dynamic_table_t dtable;
+        std::vector<cvector<int_t>> b_cuts;
+        std::vector<int_t> populate_bounds;
+        int_t H = compute_H(ilpTask.A);
+        int_t K = compute_K(ilpTask);
+        int_t current_level = 0;
     };
-
-    int_t compute_H(const matrix<int_t>& A);
-
-    int_t compute_K(const ilp_task& ilpTask);
-
-    struct dynamic_table_t
-    {   
-        struct path_t
-        {
-            cvector<int_t> x;
-            int_t distance;
-        }
-
-        using paths_block = std::onordered_set<VertexDescriptor, path_t>
-
-        struct entry_t
-        {
-            path_t path_to;
-            paths_block paths_from;
-        }
-
-        using entries_block = std::unordered_map<VertexDescriptor, entry_t>;
-
-        template <typename Path>
-        bool upd_to(VertexDescriptor v, int_t level, Path&& new_path)
-        {
-            bool has_updated = false;
-
-            auto& current_path = data[level][v].path_to;
-            if (current_path.distance < new_paht.distance)
-            {
-                has_updated = true;
-                current_path = std::forward<Path>(new_path);
-            }
-
-            return has_updated;
-        }
-
-
-        template <typename Path>
-        bool upd_from(VertexDescriptor from, VertexDescriptor to, int_t level, Path&& new_path)
-        {
-            bool has_updated = false;
-
-            auto& current_path = data[level][from].paths_from[to];
-            if (current_path.distance < new_paht.distance)
-            {
-                has_updated = true;
-                current_path = std::forward<Path>(new_path);
-            }
-
-            return has_updated;
-        }
-
-        std::vector<entries_block> data;
-
-    }
 
     void jansen_rohwedder(const ilp_task& ilpTask);
 	
