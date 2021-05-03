@@ -1,20 +1,13 @@
 #include "ilp/jansen_rohwedder.hpp"
 #include "ilp/detail/debug.hpp"
 
-#include <iostream>
 #include <stack>
 #include <algorithm>
 #include <cmath>
 
-#include <boost/graph/properties.hpp>
-#include <boost/property_map/property_map.hpp>
-#include <boost/graph/named_function_params.hpp>
-#include <boost/graph/dijkstra_shortest_paths.hpp>
-#include <boost/graph/bellman_ford_shortest_paths.hpp>
-
 namespace ilp
 {
-    int_t compute_H(const matrix <int_t>& A)
+    int_t compute_H(const matrix<int_t>& A)
     {
         int_t result = 0;
         for (index_t i = 0; i < A.cols(); ++i)
@@ -39,118 +32,116 @@ namespace ilp
         return result;
     }
 
-    bool dynamic_table_condition(const cvector<int_t>& b_cut,
-                                 const cvector <int_t>& p,
-                                 int_t bound)
+    DynamicTable::DynamicTable(const ilp_task& ilpTask) : ilpTask{ilpTask}
     {
-        cvector<int_t> distance = b_cut - p;
-        int_t norm = distance.lpNorm<Eigen::Infinity>();
-        bool result = (norm <= bound);
-
-        return result;
-    }
-
-    JRDigraph::JRDigraph(const ilp::ilp_task& ilpTask) : DigraphAdaptor{ilpTask}
-    {
-        detail::debug_log("building JR digraph ...");
+        detail::debug_log("building JR DynamicTable ...");
 
         H = compute_H(ilpTask.A);
         K = compute_K(ilpTask);
 
-        // b' = (2^(i - K) * b) is in 'b_cuts' for every i = 0, 1, ..., K
         b_cuts.reserve(K);
         for (int_t i = 0; i < K; i++)
         {
-            auto i_cut = ilpTask.b.cast<double>();
+            cvector<double> i_cut = ilpTask.b.cast<double>();
             i_cut *= std::pow(2, i - K);
             b_cuts.emplace_back(i_cut.cast<int_t>());
         }
 
-        // (6/5)^i for every i = 0, 1, ..., K
-        populate_bounds.reserve(K);
+        bounds.reserve(K);
         for (int_t i = 0; i < K; ++i)
         {
-            populate_bounds.emplace_back((6/5)^i);
+            bounds.emplace_back((6 / 5) ^ i);
         }
     }
 
-    bool JRDigraph::populate_condition(const cvector<int>& b,
-                                       const cvector<int>& p,
-                                       int_t bound) const
+    bool DynamicTable::entry_condition(const cvector<int>& p,
+                                       int_t entry_index) const
     {
-        bool result = p.lpNorm<1>() <= bound;
+        cvector<int_t> distance = b_cuts[entry_index] - p;
+        int_t norm = distance.lpNorm<Eigen::Infinity>();
+        bool result = (norm <= 4 * H);
+
         return result;
     }
 
-    void JRDigraph::populate_from(VertexDescriptor vertex,
-                                  int_t bound)
+    bool DynamicTable::bound_condition(const cvector<int>& p,
+                                       int_t entry_index) const
     {
-        const auto& point = *(this->m_base[vertex].point);
-        detail::debug_log("populate_digraph on:", point);
+        bool result = p.lpNorm<1>() <= bounds[entry_index];
+        return result;
+    }
 
-        std::stack<std::pair<VertexDescriptor, detail::dynamic_table_t::path_t>> populated;
-        detail::dynamic_table_t::path_t current_path;
+    void DynamicTable::populate_entry_from(int_t entry_index, PointId from)
+    {
+        detail::debug_log("populate_entry_from on:", entry_index);
+        const Entry& previous_entry = data[entry_index - 1][from];
 
-        // iterate over A's columns
-        for(index_t i = 0; i != ilpTask.A.cols(); i++)
-        {
-            const cvector<int>& column = ilpTask.A.col(i);
-            cvector<int> possible_new_point = point + column;
-
-            if (populate_condition(ilpTask.b, possible_new_point, bound))
-            {
-                current_path.x[i] += 1;
-                current_path.distance += ilpTask.c(i);
-
-                // try to insert and get descriptor of a new or an existing vertex
-                auto [new_vertex, is_new] = this->add_vertex(possible_new_point);
-
-                if (dynamic_table_condition(b_cuts[current_level], possible_new_point, bound))
-                {
-                    dtable.upd_from(vertex, new_vertex, current_level, current_path);
-                }
-
-                // insert the new edge to the graph
-                this->add_edge(vertex,
-                               new_vertex,
-                               EdgeProperty{-1 * ilpTask.c(i), static_cast<int_t>(i)}
-                );
-            }
-        }
+        std::stack<std::pair<Path, cvector<int_t>>> populated;
+        populated.push({Path(), previous_entry.point});
 
         while (!populated.empty())
         {
-            // recursive call of the populate function on the new points
-            auto populated_vertex = populated.top();
+            auto [current_path, current_point] = std::move(populated.top());
             populated.pop();
-            populate_from(populated_vertex, bound);
+
+            // iterate over A's columns
+            for (index_t i = 0; i != ilpTask.A.cols(); i++)
+            {
+                current_path.x[i] +=1;
+                current_path.distance += ilpTask.c(i);
+
+                // check if the point is within the bound (6/5)^i by lp-1 norm
+                if (bound_condition(current_path.x, entry_index - 1))
+                {
+                    const cvector<int>& column = ilpTask.A.col(i);
+                    cvector<int> possible_new_point = current_point + column;
+
+                    // check if the point is an entry point
+                    if (entry_condition(possible_new_point, entry_index))
+                    {
+                        // try update path to the entry point
+                        this->upd_to(0, entry_index, current_path);
+                    }
+
+                    //  add the current path and point to the queue
+                    populated.push({current_path, current_point});
+                }
+            }
         }
     }
 
-    void JRDigraph::populate_graph()
+    void DynamicTable::populate()
     {
-        const index_t m   = ilpTask.A.rows();
-        const index_t n   = ilpTask.A.cols();
-        const int_t bound = 4 * H;
+        auto n = ilpTask.A.cols();
+        auto m = ilpTask.A.rows();
 
-        // DYNAMIC PROGRAMME INIT STAGE:
-        this->dtable.data.resize(K);
+        this->data.resize(K);
 
-        this->start = this->add_vertex(cvector<int>::Zero(n, 1)).first;
-        this->m_base[start].distance = 0;
-        const cvector<int>& zero_point = *m_base[start].point;
+        auto id = this->get_point_id(cvector<int>::Zero(n, 1));
+        this->upd_to(id, 0, Path{cvector<int>::Zero(n, 1), 0});
 
-        for(int_t i = 0; i < K + 1; i++)
+        // for every entry block
+        for (int_t i = 0; i < K; ++i)
         {
-            // for every entry on the previous step
-            // populate graph and the dynamic table
-        }
+            // populate dynamic table from all the entries on the block
+            for (int_t j = 0; j < data[i].size(); ++j)
+            {
+                populate_entry_from(i, j);
+            }
 
+        }
     }
 
-    void jansen_rohwedder(const ilp_task& ilpTask)
+    ilp_solution jansen_rohwedder(const ilp_task& ilpTask)
     {
-        std::vector<std::vector<std::pair<cvector<int_t>, int_t>>> dynamic_table;
+        DynamicTable dtable(ilpTask);
+        dtable.populate();
+
+        // chose the optimal path using naive approach or max-convolution
+        // dtable.naive_merge();
+        // dtable.convolution();
+
+        return ilp_solution();
     }
 
 }  // namespace ilp

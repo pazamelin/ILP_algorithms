@@ -16,32 +16,101 @@ namespace ilp
 
     int_t compute_K(const ilp_task& ilpTask);
 
-    bool dynamic_table_condition(const cvector<int_t>& b_cut,
-                                 const cvector <int_t>& p,
-                                 int_t bound);
+    struct DynamicTable
+    {
+        explicit DynamicTable(const ilp_task& ilpTask);
 
-	struct JRDigraph : public DigraphAdaptor
-	{
-		explicit JRDigraph(const ilp::ilp_task& ilpTask);
+        using PointId = std::size_t;
 
-		bool populate_condition(const cvector<int>& b,
-                                const cvector<int>& p,
-                                int_t bound) const override;
+        template <typename PointType>
+        std::size_t get_point_id(PointType&& point)
+        {
+            std::size_t result;
 
-        void populate_from(VertexDescriptor vertex,
-                           int_t bound) override;
+            auto it = m_points.find(point);
+            if (it != m_points.end())
+            {
+                result =  it->second;
+            }
+            else
+            {
+                result = m_points.size();
+                m_points.insert({std::forward<PointType>(point), result});
+            }
 
-        void populate_graph() override;
+            return result;
+        }
 
-        detail::dynamic_table_t dtable;
-        std::vector<cvector<int_t>> b_cuts;
-        std::vector<int_t> populate_bounds;
-        int_t H = compute_H(ilpTask.A);
-        int_t K = compute_K(ilpTask);
-        int_t current_level = 0;
+        struct Path
+        {
+            cvector <int_t> x;
+            int_t distance = std::numeric_limits<int_t>::min();
+        };
+
+        using PathsBlock = std::unordered_map<PointId, Path>;
+
+        struct Entry
+        {
+            cvector<int_t> point;
+            Path path_to;
+            PathsBlock paths_from;
+        };
+
+        using EntriesBlock = std::unordered_map<PointId, Entry>;
+
+        template <typename PathType>
+        bool upd_to(PointId pid, int_t level, PathType&& new_path)
+        {
+            bool has_updated = false;
+
+            auto& current_path = data[level][pid].path_to;
+            if (current_path.distance < new_path.distance)
+            {
+                has_updated = true;
+                current_path = std::forward<Path>(new_path);
+            }
+
+            return has_updated;
+        }
+
+        template <typename PathType>
+        bool upd_from(PointId from, PointId to, int_t level, PathType&& new_path)
+        {
+            bool has_updated = false;
+
+            auto& current_path = data[level][from].paths_from[to];
+            if (current_path.distance < new_path.distance)
+            {
+                has_updated = true;
+                current_path = std::forward<Path>(new_path);
+            }
+
+            return has_updated;
+        }
+
+        [[nodiscard]] bool entry_condition(const cvector<int>& p,
+                                           int_t entry_index) const;
+
+        [[nodiscard]] bool bound_condition(const cvector<int>& p,
+                                           int_t entry_index) const;
+
+        void populate_entry_from(int_t entry_index, PointId from);
+
+        void populate();
+
+    public:
+        const ilp_task& ilpTask;
+
+        std::vector<EntriesBlock> data;
+        std::vector<cvector<int>> b_cuts;
+        std::vector<int> bounds;
+        int_t K;
+        int_t H;
+
+        std::unordered_map<cvector<int_t>, std::size_t, detail::VectorHash<int_t>> m_points;
     };
 
-    void jansen_rohwedder(const ilp_task& ilpTask);
+    ilp_solution jansen_rohwedder(const ilp_task& ilpTask);
 	
 } // namespace ilp
 
