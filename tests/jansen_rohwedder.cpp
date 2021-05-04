@@ -13,10 +13,10 @@ TEST_CASE("2x2", "[jansen_rohwedder]")
     ilp::rvector<int> c(1, 2);
 
     A << 2, 1,
-            1, 2;
+         1, 2;
 
     b << 30,
-            30;
+         30;
 
     c << 2, 3;
 

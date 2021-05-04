@@ -20,94 +20,74 @@ namespace ilp
     {
         explicit DynamicTable(const ilp_task& ilpTask);
 
-        using PointId = std::size_t;
-
-        template <typename PointType>
-        std::size_t get_point_id(PointType&& point)
-        {
-            std::size_t result;
-
-            auto it = m_points.find(point);
-            if (it != m_points.end())
-            {
-                result =  it->second;
-            }
-            else
-            {
-                result = m_points.size();
-                m_points.insert({std::forward<PointType>(point), result});
-            }
-
-            return result;
-        }
-
         struct Path
         {
-            cvector <int_t> x;
+            Path() = default;
+            Path(cvector<int_t> x, int_t distance) : x{std::move(x)}, distance{distance} { };
+
+            cvector<int_t> x;
             int_t distance = std::numeric_limits<int_t>::min();
         };
 
-        using PathsBlock = std::unordered_map<PointId, Path>;
+        using PathsBlock = std::unordered_map<cvector<int_t>, Path, detail::VectorHash<int_t>>;
 
         struct Entry
         {
-            cvector<int_t> point;
-            Path path_to;
             PathsBlock paths_from;
         };
 
-        using EntriesBlock = std::unordered_map<PointId, Entry>;
+        using EntriesBlock = std::unordered_map<cvector<int_t>, Entry, detail::VectorHash<int_t>>;
 
         template <typename PathType>
-        bool upd_to(PointId pid, int_t level, PathType&& new_path)
+        bool upd_from(int_t entry_index,
+                      const cvector<int_t>& from,
+                      const cvector<int_t>& to,
+                      PathType&& new_path)
         {
             bool has_updated = false;
 
-            auto& current_path = data[level][pid].path_to;
+            auto& current_path = data[entry_index][from].paths_from[to];
             if (current_path.distance < new_path.distance)
             {
                 has_updated = true;
-                current_path = std::forward<Path>(new_path);
+                current_path = std::forward<PathType>(new_path);
             }
 
             return has_updated;
         }
 
-        template <typename PathType>
-        bool upd_from(PointId from, PointId to, int_t level, PathType&& new_path)
-        {
-            bool has_updated = false;
-
-            auto& current_path = data[level][from].paths_from[to];
-            if (current_path.distance < new_path.distance)
-            {
-                has_updated = true;
-                current_path = std::forward<Path>(new_path);
-            }
-
-            return has_updated;
-        }
-
-        [[nodiscard]] bool entry_condition(const cvector<int>& p,
+        [[nodiscard]] bool entry_condition(const cvector<int_t>& p,
                                            int_t entry_index) const;
 
-        [[nodiscard]] bool bound_condition(const cvector<int>& p,
+        [[nodiscard]] bool bound_condition(const cvector<int_t>& p,
                                            int_t entry_index) const;
 
-        void populate_entry_from(int_t entry_index, PointId from);
+        void populate_entry_from(int_t entry_index, const cvector<int_t>& from);
 
         void populate();
+
+        template <typename PointType>
+        bool add_entry_point(PointType&& p, int_t entry_index)
+        {
+            bool has_inserted = false;
+            auto p_it = this->data[entry_index].find(p);
+            if (p_it == this->data[entry_index].end())
+            {
+                this->data[entry_index][std::forward<PointType>(p)] = Entry{ };
+                has_inserted = true;
+            }
+
+            return has_inserted;
+        }
 
     public:
         const ilp_task& ilpTask;
 
         std::vector<EntriesBlock> data;
-        std::vector<cvector<int>> b_cuts;
-        std::vector<int> bounds;
+        std::vector<cvector<int_t>> b_cuts;
+        std::vector<int_t> bounds;
         int_t K;
         int_t H;
-
-        std::unordered_map<cvector<int_t>, std::size_t, detail::VectorHash<int_t>> m_points;
     };
 
     ilp_solution jansen_rohwedder(const ilp_task& ilpTask);
