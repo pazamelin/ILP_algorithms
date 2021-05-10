@@ -1,7 +1,7 @@
 #ifndef ILP_DETAIL_DEBUG_HPP
 #define ILP_DETAIL_DEBUG_HPP
 
-#define ILP_DIGRAPH_DEBUG_LOG
+//#define ILP_DIGRAPH_DEBUG_LOG
 
 #include <iostream>
 

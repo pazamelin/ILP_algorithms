@@ -85,7 +85,7 @@ namespace ilp
 
         std::vector<EntriesBlock> data;
         std::vector<cvector<int_t>> b_cuts;
-        std::vector<int_t> bounds;
+        std::vector<double> bounds;
         int_t K;
         int_t H;
     };

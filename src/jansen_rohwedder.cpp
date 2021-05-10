@@ -35,26 +35,37 @@ namespace ilp
         H = compute_H(ilpTask.A);
         K = compute_K(ilpTask);
 
-        b_cuts.reserve(K + 1);
-        for (int_t i = 0; i < K + 1; i++)
+        b_cuts.emplace_back(cvector<int_t>::Zero(ilpTask.b.rows(), 1));
+
+        for (int_t i = 1; i < K + 1; i++)
         {
             cvector<double> i_cut = ilpTask.b.cast<double>();
             i_cut *= std::pow(2, i - K);
             cvector<int_t> i_cut_int = i_cut.cast<int_t>();
+            if (i_cut_int != b_cuts.back())
+            {
+                detail::debug_log("     i:", i);
+                detail::debug_log("     cut:", i_cut);
+                detail::debug_log("     cut_int:", i_cut_int);
+                detail::debug_log("");
 
-            detail::debug_log("     i:", i);
-            detail::debug_log("     cut:", i_cut);
-            detail::debug_log("     cut_int:", i_cut_int);
-            detail::debug_log("");
-
-            b_cuts.emplace_back(std::move(i_cut_int));
+                b_cuts.emplace_back(std::move(i_cut_int));
+            }
         }
 
-        double bound_body = 6.0 / 5.0;
-        bounds.reserve(K + 1);
-        for (int_t i = 0; i < K + 1; ++i)
+        K = static_cast<int_t>(b_cuts.size());
+
+        detail::debug_log("");
+        detail::debug_log("K ", K);
+        detail::debug_log("H ", H);
+
+        bounds.emplace_back(1.0);
+        detail::debug_log("bound ", bounds[0]);
+        for (int_t i = 1; i < K + 1; ++i)
         {
-            bounds.emplace_back(std::pow(bound_body, i));
+            double bound = bounds[i - 1] * 2.0;
+            bounds.emplace_back(bound);
+            detail::debug_log("bound ", bound);
         }
     }
 
@@ -63,6 +74,7 @@ namespace ilp
     {
         detail::debug_log("check entry_condition:");
         detail::debug_log("     point:", p);
+        detail::debug_log("bound:", bounds[entry_index]);
 
         bool result = false;
         if (entry_index != K)
@@ -78,7 +90,11 @@ namespace ilp
         {
             detail::debug_log("     b:", this->ilpTask.b);
             result = (p == this->ilpTask.b);
-            if (result) detail::debug_log("***");
+            if (result)
+            {
+                detail::debug_log("***");
+                std::cout << "***";
+            }
         }
 
         detail::debug_log("     bound:", 4 * H);
@@ -115,8 +131,13 @@ namespace ilp
                 current_path.distance += ilpTask.c(i);
 
                 // check if the point is within the bound (6/5)^i by lp_1 norm
-                if (bound_condition(current_path.x, entry_index))
+                int_t ei = (entry_index == 0) ? 0 : entry_index - 1;
+                if (bound_condition(current_path.x, ei))
                 {
+                    detail::debug_log("");
+                    detail::debug_log("x:", current_path.x);
+                    detail::debug_log("x_bound", bounds[ei]);
+
                     const cvector<int_t>& column = ilpTask.A.col(i);
                     cvector<int_t> possible_new_point = current_point + column;
 
@@ -127,11 +148,11 @@ namespace ilp
                         this->upd_from(entry_index, from, possible_new_point, current_path);
 
                         // try to insert the entry point into the next entry of the dtable
-                        this->add_entry_point(std::move(possible_new_point), entry_index + 1);
+                        this->add_entry_point(possible_new_point, entry_index + 1);
                     }
 
                     // add the current path and point to the queue
-                    populated.push({current_path, current_point});
+                    populated.push({current_path, possible_new_point});
                 }
 
                 current_path.x(i) -=1;
