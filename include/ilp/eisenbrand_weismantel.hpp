@@ -12,10 +12,10 @@ namespace ilp
 
 		bool populate_condition(const cvector<int>& b,
                                 const cvector<int>& p,
-                                int_t bound) const override;
+                                int bound) const override;
 
         void populate_from(VertexDescriptor vertex,
-                           int_t bound) override;
+                           int bound) override;
 
         void populate_graph() override;
 	};

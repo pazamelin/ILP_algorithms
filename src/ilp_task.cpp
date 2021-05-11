@@ -2,7 +2,7 @@
 
 namespace ilp
 {
-    ilp_task::ilp_task(matrix<int_t> A, cvector<int_t> b, rvector<int_t> c)
+    ilp_task::ilp_task(matrix<int> A, cvector<int> b, rvector<int> c)
         : A{std::move(A)}
         , b{std::move(b)}
         , c{std::move(c)}

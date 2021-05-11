@@ -8,7 +8,6 @@
 
 namespace ilp
 {
-    using int_t = int;
     using index_t = Eigen::Index;
 
     template <typename T>
@@ -91,17 +90,17 @@ namespace ilp
     class ilp_task
     {
     public:
-        ilp_task(matrix<int_t> A, cvector<int_t> b, rvector<int_t> c);
+        ilp_task(matrix<int> A, cvector<int> b, rvector<int> c);
         ~ilp_task() = default;
 
         [[nodiscard]] std::size_t size_m() const;
         [[nodiscard]] std::size_t size_n() const;
 
     public:
-        matrix<int_t> A;
-        cvector<int_t> b;
-        rvector<int_t> c;
-        cvector<int_t> x;
+        matrix<int> A;
+        cvector<int> b;
+        rvector<int> c;
+        cvector<int> x;
 
         std::size_t m;
         std::size_t n;
@@ -111,8 +110,8 @@ namespace ilp
     {
         bool is_feasible = false;
         bool is_bounded = false;
-        std::vector<int_t> x;
-        int_t c_result;
+        std::vector<int> x;
+        int c_result;
     };
 
 } // namespace ilp

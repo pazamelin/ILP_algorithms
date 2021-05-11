@@ -21,7 +21,7 @@ namespace ilp
 
 	bool EWDigraph::populate_condition(const cvector<int>& b,
                                        const cvector<int>& p,
-                                       int_t bound) const
+                                       int bound) const
 	{
 		{
             detail::debug_log("populate_condition call:");
@@ -52,9 +52,9 @@ namespace ilp
 	}
 
     void EWDigraph::populate_from(VertexDescriptor vertex,
-                                  int_t bound)
+                                  int bound)
     {
-    	const auto& point = *(this->m_base[vertex].point);
+    	const auto point = this->m_base[vertex].point;
         detail::debug_log("populate_digraph on:", point);
 
         std::stack<VertexDescriptor> populated;
@@ -73,7 +73,7 @@ namespace ilp
                 // insert the new edge to the graph
                 this->add_edge(vertex,
                                new_vertex,
-                               EdgeProperty{-1 * ilpTask.c(i), static_cast<int_t>(i)}
+                               EdgeProperty{-1 * ilpTask.c(i), static_cast<int>(i)}
                 );
 
                 // save the vertex descriptor for later recursive call of the populate function
@@ -97,10 +97,10 @@ namespace ilp
     {
         const index_t m   = ilpTask.A.rows();
         const index_t n   = ilpTask.A.cols();
-        const int_t delta = ilpTask.A.lpNorm<Eigen::Infinity>();
-        const int_t bound = 2 * static_cast<int_t>(m) * delta;
+        const int delta = ilpTask.A.lpNorm<Eigen::Infinity>();
+        const int bound = 2 * static_cast<int>(m) * delta;
 
-        this->start = this->add_vertex(cvector<int>::Zero(n, 1)).first;
+        this->start = this->add_vertex(cvector<int>::Zero(m, 1)).first;
         this->m_base[start].distance = 0;
 
         populate_from(start, bound);
@@ -119,7 +119,7 @@ namespace ilp
         const index_t n = ilpTask.A.cols();
 
         ilp_solution result;
-        result.x = std::vector<int_t>(n, 0);
+        result.x = std::vector<int>(n, 0);
 
         ilp::EWDigraph graph{ilpTask};
         graph.populate_graph();
