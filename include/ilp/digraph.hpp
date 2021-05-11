@@ -33,15 +33,15 @@ namespace ilp
 
     struct VertexProperty
     {
-        const cvector<int_t>* point = nullptr;
+        cvector<int> point;
         VertexDescriptor predecessor = { };
-        int_t distance = std::numeric_limits<int_t>::max();
+        int distance = std::numeric_limits<int>::max();
     };
 
     struct EdgeProperty
     {
-        int_t weight;
-        int_t column;
+        int weight;
+        int column;
     };
 
     using BaseGraph = boost::adjacency_list<
@@ -74,7 +74,7 @@ namespace ilp
             auto [new_it, is_inserted] = m_points_set.emplace(
                     std::make_pair(std::forward<VertexPoint>(point), vertex_descriptor)
             );
-            m_base[vertex_descriptor].point = &(new_it->first);
+            m_base[vertex_descriptor].point = new_it->first;
 
             return {vertex_descriptor, true};
         }
@@ -94,7 +94,7 @@ namespace ilp
         const ilp::ilp_task& ilpTask;
 
         BaseGraph m_base;
-        std::unordered_map<cvector<int_t>, VertexDescriptor, detail::VectorHash<int_t>> m_points_set;
+        std::unordered_map<cvector<int>, VertexDescriptor, detail::VectorHash<int>> m_points_set;
         
         VertexDescriptor start;
         VertexDescriptor end;
@@ -103,10 +103,10 @@ namespace ilp
     private:
         virtual bool populate_condition(const cvector<int>& b,
                                         const cvector<int>& p,
-                                        int_t bound) const = 0;
+                                        int bound) const = 0;
 
         virtual void populate_from(VertexDescriptor vertex,
-                                   int_t bound) = 0;
+                                   int bound) = 0;
 
         virtual void populate_graph() = 0;
     };

@@ -7,9 +7,9 @@
 
 namespace ilp
 {
-    int_t compute_H(const matrix<int_t>& A)
+    int compute_H(const matrix<int>& A)
     {
-        int_t result = 0;
+        int result = 0;
         for (index_t i = 0; i < A.cols(); ++i)
         {
             result = std::max(result, A.col(i).lpNorm<1>());
@@ -18,14 +18,14 @@ namespace ilp
         return result;
     }
 
-    int_t compute_K(const ilp_task& ilpTask)
+    int compute_K(const ilp_task& ilpTask)
     {
         auto m = static_cast<double>(ilpTask.A.rows());
         auto delta = static_cast<double>(ilpTask.A.lpNorm<Eigen::Infinity>());
 
         double a = m * std::log2(m);
         double b = m * std::log2(delta + ilpTask.b.lpNorm<Eigen::Infinity>());
-        auto result = static_cast<int_t>(a + b);
+        auto result = static_cast<int>(a + b);
 
         return result;
     }
@@ -35,13 +35,13 @@ namespace ilp
         H = compute_H(ilpTask.A);
         K = compute_K(ilpTask);
 
-        b_cuts.emplace_back(cvector<int_t>::Zero(ilpTask.b.rows(), 1));
+        b_cuts.emplace_back(cvector<int>::Zero(ilpTask.b.rows(), 1));
 
-        for (int_t i = 1; i < K + 1; i++)
+        for (int i = 1; i < K + 1; i++)
         {
             cvector<double> i_cut = ilpTask.b.cast<double>();
             i_cut *= std::pow(2, i - K);
-            cvector<int_t> i_cut_int = i_cut.cast<int_t>();
+            cvector<int> i_cut_int = i_cut.cast<int>();
             if (i_cut_int != b_cuts.back())
             {
                 detail::debug_log("     i:", i);
@@ -53,7 +53,7 @@ namespace ilp
             }
         }
 
-        K = static_cast<int_t>(b_cuts.size());
+        K = static_cast<int>(b_cuts.size());
 
         detail::debug_log("");
         detail::debug_log("K ", K);
@@ -61,16 +61,16 @@ namespace ilp
 
         bounds.emplace_back(1.0);
         detail::debug_log("bound ", bounds[0]);
-        for (int_t i = 1; i < K + 1; ++i)
+        for (int i = 1; i < K; ++i)
         {
-            double bound = bounds[i - 1] * 2.0;
+            double bound = std::ceil(bounds.back() * 1.2);
             bounds.emplace_back(bound);
             detail::debug_log("bound ", bound);
         }
     }
 
-    bool DynamicTable::entry_condition(const cvector<int_t>& p,
-                                       int_t entry_index) const
+    bool DynamicTable::entry_condition(const cvector<int>& p,
+                                       int entry_index) const
     {
         detail::debug_log("check entry_condition:");
         detail::debug_log("     point:", p);
@@ -79,8 +79,8 @@ namespace ilp
         bool result = false;
         if (entry_index != K)
         {
-            cvector<int_t> distance = b_cuts[entry_index] - p;
-            int_t norm = distance.lpNorm<Eigen::Infinity>();
+            cvector<int> distance = b_cuts[entry_index] - p;
+            int norm = distance.lpNorm<Eigen::Infinity>();
             result = (norm <= 4 * H);
 
             detail::debug_log("     b_cut:", b_cuts[entry_index]);
@@ -90,11 +90,6 @@ namespace ilp
         {
             detail::debug_log("     b:", this->ilpTask.b);
             result = (p == this->ilpTask.b);
-            if (result)
-            {
-                detail::debug_log("***");
-                std::cout << "***";
-            }
         }
 
         detail::debug_log("     bound:", 4 * H);
@@ -104,20 +99,20 @@ namespace ilp
         return result;
     }
 
-    bool DynamicTable::bound_condition(const cvector<int_t>& p,
-                                       int_t entry_index) const
+    bool DynamicTable::bound_condition(const cvector<int>& p,
+                                       int entry_index) const
     {
         bool result = p.lpNorm<1>() <= bounds[entry_index];
         return result;
     }
 
-    void DynamicTable::populate_entry_from(int_t entry_index,
-                                          const cvector<int_t>& from)
+    void DynamicTable::populate_entry_from(int entry_index,
+                                          const cvector<int>& from)
     {
         detail::debug_log("populate_entry_from on:", entry_index);
 
-        std::stack<std::pair<Path, cvector<int_t>>> populated;
-        populated.push({Path(cvector<int_t>::Zero(ilpTask.A.cols(), 1), 0), from});
+        std::stack<std::pair<Path, cvector<int>>> populated;
+        populated.push({Path(cvector<int>::Zero(ilpTask.A.cols(), 1), 0), from});
 
         while (!populated.empty())
         {
@@ -129,56 +124,71 @@ namespace ilp
             {
                 current_path.x[i] += 1;
                 current_path.distance += ilpTask.c(i);
+                const cvector<int>& column = ilpTask.A.col(i);
 
                 // check if the point is within the bound (6/5)^i by lp_1 norm
-                int_t ei = (entry_index == 0) ? 0 : entry_index - 1;
-                if (bound_condition(current_path.x, ei))
+                int bound_index = (entry_index == 0) ? 0 : entry_index;
+                if (bound_condition(current_path.x, bound_index))
                 {
                     detail::debug_log("");
                     detail::debug_log("x:", current_path.x);
-                    detail::debug_log("x_bound", bounds[ei]);
+                    detail::debug_log("x_bound", bounds[bound_index]);
 
-                    const cvector<int_t>& column = ilpTask.A.col(i);
-                    cvector<int_t> possible_new_point = current_point + column;
+                    current_point += column;
 
+                    std::cout << "      checking " << current_point << std::endl;
                     // check if the point is an entry point
-                    if (entry_condition(possible_new_point, entry_index + 1))
+                    if (entry_condition(current_point, entry_index + 1))
                     {
                         // try to update path to the entry point
-                        this->upd_from(entry_index, from, possible_new_point, current_path);
+                        this->upd_from(entry_index, from, current_point, current_path);
 
                         // try to insert the entry point into the next entry of the dtable
-                        this->add_entry_point(possible_new_point, entry_index + 1);
+                        this->add_entry_point(current_point, entry_index + 1);
                     }
 
                     // add the current path and point to the queue
-                    populated.push({current_path, possible_new_point});
+                    populated.push({current_path, current_point});
                 }
 
                 current_path.x(i) -=1;
                 current_path.distance -= ilpTask.c(i);
+                current_point -= column;
             }
         }
     }
 
     void DynamicTable::populate()
     {
+        std::cout << "call to populate" << std::endl;
         auto n = ilpTask.A.cols();
         auto m = ilpTask.A.rows();
 
         this->data.resize(K + 1);
-        this->add_entry_point(cvector<int_t>::Zero(n, 1), 0);
+        this->add_entry_point(cvector<int>::Zero(n, 1), 0);
 
         // for every entry block
-        for (int_t i = 0; i < K; ++i)
+        for (int i = 0; i < K - 1; ++i)
         {
+            std::cout << "i: " << i << std::endl;
+            int bound_index = (i == 0) ? 0 : (i);
+            std::cout << "x_bound:" << bounds[bound_index] << std::endl;
+            std::cout << "b_cut:" << b_cuts[i + 1] << std::endl;
+
             // populate dynamic table from all the entries on the block
             for (const auto& [point, entry] : this->data[i])
             {
+                std::cout << "populate_entry_from " << point << std::endl;
                 populate_entry_from(i, point);
             }
 
         }
+
+        if (data.back().size() == 1)
+        {
+            std::cout << "B FOUND" << std::endl;
+        }
+
     }
 
     ilp_solution jansen_rohwedder(const ilp_task& ilpTask)

@@ -12,9 +12,9 @@
 
 namespace ilp
 {
-    int_t compute_H(const matrix<int_t>& A);
+    int compute_H(const matrix<int>& A);
 
-    int_t compute_K(const ilp_task& ilpTask);
+    int compute_K(const ilp_task& ilpTask);
 
     struct DynamicTable
     {
@@ -23,25 +23,25 @@ namespace ilp
         struct Path
         {
             Path() = default;
-            Path(cvector<int_t> x, int_t distance) : x{std::move(x)}, distance{distance} { };
+            Path(cvector<int> x, int distance) : x{std::move(x)}, distance{distance} { };
 
-            cvector<int_t> x;
-            int_t distance = std::numeric_limits<int_t>::min();
+            cvector<int> x;
+            int distance = std::numeric_limits<int>::min();
         };
 
-        using PathsBlock = std::unordered_map<cvector<int_t>, Path, detail::VectorHash<int_t>>;
+        using PathsBlock = std::unordered_map<cvector<int>, Path, detail::VectorHash<int>>;
 
         struct Entry
         {
             PathsBlock paths_from;
         };
 
-        using EntriesBlock = std::unordered_map<cvector<int_t>, Entry, detail::VectorHash<int_t>>;
+        using EntriesBlock = std::unordered_map<cvector<int>, Entry, detail::VectorHash<int>>;
 
         template <typename PathType>
-        bool upd_from(int_t entry_index,
-                      const cvector<int_t>& from,
-                      const cvector<int_t>& to,
+        bool upd_from(int entry_index,
+                      const cvector<int>& from,
+                      const cvector<int>& to,
                       PathType&& new_path)
         {
             bool has_updated = false;
@@ -56,18 +56,18 @@ namespace ilp
             return has_updated;
         }
 
-        [[nodiscard]] bool entry_condition(const cvector<int_t>& p,
-                                           int_t entry_index) const;
+        [[nodiscard]] bool entry_condition(const cvector<int>& p,
+                                           int entry_index) const;
 
-        [[nodiscard]] bool bound_condition(const cvector<int_t>& p,
-                                           int_t entry_index) const;
+        [[nodiscard]] bool bound_condition(const cvector<int>& p,
+                                           int entry_index) const;
 
-        void populate_entry_from(int_t entry_index, const cvector<int_t>& from);
+        void populate_entry_from(int entry_index, const cvector<int>& from);
 
         void populate();
 
         template <typename PointType>
-        bool add_entry_point(PointType&& p, int_t entry_index)
+        bool add_entry_point(PointType&& p, int entry_index)
         {
             bool has_inserted = false;
             auto p_it = this->data[entry_index].find(p);
@@ -84,10 +84,10 @@ namespace ilp
         const ilp_task& ilpTask;
 
         std::vector<EntriesBlock> data;
-        std::vector<cvector<int_t>> b_cuts;
+        std::vector<cvector<int>> b_cuts;
         std::vector<double> bounds;
-        int_t K;
-        int_t H;
+        int K;
+        int H;
     };
 
     ilp_solution jansen_rohwedder(const ilp_task& ilpTask);

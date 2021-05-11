@@ -21,7 +21,6 @@ TEST_CASE("2x2", "[jansen_rohwedder]")
     c << 2, 3;
 
     ilp::ilp_task test_task = {A, b, c};
-    ilp::jansen_rohwedder(test_task);
     auto result = ilp::jansen_rohwedder(test_task);
 
     /*
@@ -44,17 +43,16 @@ TEST_CASE("4x4", "[jansen_rohwedder]")
             8, 6, 8, 1;
 
     b << 40,
-            40,
-            40,
-            40;
+         40,
+         40,
+         40;
 
     c << 2, 3, 4, 5;
 
     ilp::ilp_task test_task = {A, b, c};
     auto result = ilp::jansen_rohwedder(test_task);
 
-    /*
-    REQUIRE(result.is_feasible == false);
-    REQUIRE(result.is_bounded == false);
-     */
+    //REQUIRE(result.is_feasible == false);
+    //REQUIRE(result.is_bounded == false);
 }
+

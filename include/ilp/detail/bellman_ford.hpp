@@ -8,7 +8,7 @@ namespace ilp::detail
 {
     template <typename Edge,
               typename Graph,
-              typename DistanceCmp = std::less<int_t>>
+              typename DistanceCmp = std::less<int>>
     bool relax(Edge edge_descriptor,
                Graph& graph,
                DistanceCmp dcmp = { }
@@ -35,7 +35,7 @@ namespace ilp::detail
 
     template <typename Vertex,
               typename Graph,
-              typename DistanceCmp = std::less<int_t>>
+              typename DistanceCmp = std::less<int>>
     bool bellman_ford(Vertex src,
                       Graph& graph,
                       DistanceCmp dcmp = { })

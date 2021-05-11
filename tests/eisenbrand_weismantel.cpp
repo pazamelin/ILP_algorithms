@@ -54,3 +54,49 @@ TEST_CASE("4x4", "[eisenbrand_weismantel]")
     REQUIRE(result.is_feasible == false);
     REQUIRE(result.is_bounded == false);
 }
+
+
+TEST_CASE("5x2", "[eisenbrand_weismantel]")
+{   // feasible
+    ilp::matrix<int> A(2, 5);
+    ilp::cvector<int> b(2, 1);
+    ilp::rvector<int> c(1, 5);
+
+    A <<    1, 2, 0, 1, 5,
+            6, 3, 4, 0, 0;
+
+    b <<    5,
+            6;
+
+    c << 1, 3, 0, 0, 0;
+
+    ilp::ilp_task test_task = {A, b, c};
+    auto result = ilp::eisenbrand_weismantel(test_task);
+
+    REQUIRE(result.is_feasible == true);
+    REQUIRE(result.is_bounded == true);
+    REQUIRE(result.x == std::vector<int>{0, 2, 0, 1, 0});
+}
+
+TEST_CASE("6x3", "[eisenbrand_weismantel]")
+{   // feasible
+    ilp::matrix<int> A(3, 6);
+    ilp::cvector<int> b(3, 1);
+    ilp::rvector<int> c(1, 6);
+
+    A << 5, 3, 2, 1, 4, 8,
+         4, 2, 6, 9, 7, 1,
+         0, 6, 3, 4, 2, 2;
+
+    b << 20,
+         20,
+         20;
+
+    c << 6, 1, 6, 8, 2, 5;
+
+    ilp::ilp_task test_task = {A, b, c};
+    auto result = ilp::eisenbrand_weismantel(test_task);
+
+    REQUIRE(result.is_feasible == false);
+    REQUIRE(result.is_bounded == false);
+}
