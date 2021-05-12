@@ -3,7 +3,6 @@
 #include <ilp/eisenbrand_weismantel.hpp>
 
 #define CATCH_CONFIG_MAIN
-
 #include <catch2/catch.hpp>
 
 TEST_CASE("2x2", "[eisenbrand_weismantel]")
@@ -21,7 +20,6 @@ TEST_CASE("2x2", "[eisenbrand_weismantel]")
     c << 2, 3;
 
     ilp::ilp_task test_task = {A, b, c};
-    ilp::eisenbrand_weismantel(test_task);
     auto result = ilp::eisenbrand_weismantel(test_task);
 
     REQUIRE(result.is_feasible == true);

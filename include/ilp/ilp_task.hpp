@@ -49,44 +49,6 @@ namespace ilp
 
     } // namespace detail
 
-    template <typename T>
-    std::ostream& operator << (std::ostream& os, const rvector<T>& vec)
-    {
-        bool flag{false};
-
-        os << "(";
-        for (index_t col = 0; col < vec.cols(); ++col)
-        {
-            if (flag)
-            {
-                os << ", ";
-            }
-            flag = true;
-            os << vec(col);
-        }
-        os << ")";
-        return os;
-    }
-
-    template <typename T>
-    std::ostream& operator << (std::ostream& os, const cvector<T>& vec)
-    {
-        bool flag{false};
-
-        os << "(";
-        for (index_t row = 0; row < vec.rows(); ++row)
-        {
-            if (flag)
-            {
-                os << ", ";
-            }
-            flag = true;
-            os << vec(row);
-        }
-        os << ")^T";
-        return os;
-    }
-
     class ilp_task
     {
     public:
@@ -110,10 +72,67 @@ namespace ilp
     {
         bool is_feasible = false;
         bool is_bounded = false;
-        std::vector<int> x;
+        cvector<int> x;
         int c_result;
     };
 
 } // namespace ilp
+
+template <typename T>
+std::ostream& operator << (std::ostream& os, const ilp::rvector<T>& vec)
+{
+    bool flag{false};
+
+    os << "(";
+    for (ilp::index_t col = 0; col < vec.cols(); ++col)
+    {
+        if (flag)
+        {
+            os << ", ";
+        }
+        flag = true;
+        os << vec(col);
+    }
+    os << ")";
+    return os;
+}
+
+template <typename T>
+std::ostream& operator << (std::ostream& os, const ilp::cvector<T>& vec)
+{
+    bool flag{false};
+
+    os << "(";
+    for (ilp::index_t row = 0; row < vec.rows(); ++row)
+    {
+        if (flag)
+        {
+            os << ", ";
+        }
+        flag = true;
+        os << vec(row);
+    }
+    os << ")^T";
+    return os;
+}
+
+template <typename T>
+std::ostream& operator << (std::ostream& os, const ilp::matrix<T>& A)
+{
+    for (int row = 0; row < A.rows(); ++row)
+    {
+        for (int col = 0; col < A.cols(); ++col)
+        {
+            os << "   " << A(row, col) << " ";
+        }
+
+        if (row != A.rows() - 1)
+        {
+            os <<  "\n";
+        }
+    }
+
+    return os;
+}
 
 #endif // ILP_TASK_HPP

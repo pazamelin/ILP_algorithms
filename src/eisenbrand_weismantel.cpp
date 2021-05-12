@@ -119,7 +119,7 @@ namespace ilp
         const index_t n = ilpTask.A.cols();
 
         ilp_solution result;
-        result.x = std::vector<int>(n, 0);
+        result.x = cvector<int>::Zero(n, 1);
 
         ilp::EWDigraph graph{ilpTask};
         graph.populate_graph();
@@ -142,7 +142,7 @@ namespace ilp
                     const auto& vertex = graph.m_base[vd];
                     EdgeDescriptor ed = boost::edge(vertex.predecessor, vd, graph.m_base).first;
                     const auto& edge = graph.m_base[ed];
-                    result.x[edge.column] += 1;
+                    result.x(edge.column, 0) += 1;
 
                     vd = vertex.predecessor;
                 }

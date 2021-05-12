@@ -45,7 +45,6 @@ message(STATUS "ILPLIB_BUILD_TESTS : ${ILPLIB_BUILD_TESTS}")
 
 # Testing only available if this is the main app
 # Emergency override MODERN_CMAKE_BUILD_TESTING provided as well
-if((CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME OR ILPLIB_BUILD_TESTS)
-        AND BUILD_TESTING)
+if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME OR ILPLIB_BUILD_TESTS)
     add_subdirectory(tests)
 endif()
