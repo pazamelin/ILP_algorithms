@@ -53,42 +53,41 @@ namespace ilp
     void EWDigraph::populate_from(VertexDescriptor vertex,
                                   int bound)
     {
-    	const auto point = this->m_base[vertex].point;
-        detail::debug_log("populate_digraph on:", point);
-
         std::stack<VertexDescriptor> populated;
-
-        // iterate over A's columns
-        for(index_t i = 0; i != ilpTask.A.cols(); i++)
-        {
-            const cvector<int>& column = ilpTask.A.col(i);
-            cvector<int> possible_new_point = point + column;
-
-            if (populate_condition(ilpTask.b, possible_new_point, bound))
-            {
-                // try to insert and get descriptor of a new or an existing vertex
-                auto [new_vertex, is_new] = this->add_vertex(std::move(possible_new_point));
-
-                // insert the new edge to the graph
-                this->add_edge(vertex,
-                               new_vertex,
-                               EdgeProperty{-1 * ilpTask.c(i), static_cast<int>(i)}
-                );
-
-                // save the vertex descriptor for later recursive call of the populate function
-                if (is_new)
-                {
-                    populated.push(new_vertex);
-                }
-            }
-        }
+        populated.push(vertex);
 
         while (!populated.empty())
         {
-            // recursive call of the populate function on the new points
-            auto populated_vertex = populated.top();
+            auto current_vertex = populated.top();
+            auto current_point = this->m_base[current_vertex].point;
             populated.pop();
-            populate_from(populated_vertex, bound);
+
+            // iterate over A's columns
+            for (index_t i = 0; i != ilpTask.A.cols(); i++)
+            {
+                const cvector<int>& column = ilpTask.A.col(i);
+                current_point += column;
+
+                if (populate_condition(ilpTask.b, current_point, bound))
+                {
+                    // try to insert and get descriptor of a new or an existing vertex
+                    auto[new_vertex, is_new] = this->add_vertex(current_point);
+
+                    // insert the new edge to the graph
+                    this->add_edge(current_vertex,
+                                   new_vertex,
+                                   EdgeProperty{-1 * ilpTask.c(i), static_cast<int>(i)}
+                    );
+
+                    // save the vertex descriptor for later recursive call of the populate function
+                    if (is_new)
+                    {
+                        populated.push(new_vertex);
+                    }
+                }
+
+                current_point -= column;
+            }
         }
     }
 

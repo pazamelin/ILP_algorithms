@@ -7,17 +7,6 @@
 #define CATCH_CONFIG_MAIN
 #include <catch2/catch.hpp>
 
-/*
-// Magic tricks to have CPLEX behave well:
-#ifndef IL_STD
-#define IL_STD
-#endif
-#include <cstring>
-#include <ilcplex/ilocplex.h>
-ILOSTLBEGIN
-// End magic tricks
-*/
-
 TEST_CASE("2x2", "[eisenbrand_weismantel]")
 {   // feasible
     ilp::matrix<int> A(2, 2);
@@ -138,5 +127,20 @@ TEST_CASE("2x8", "[eisenbrand_weismantel]")
     }
 
     std::cout << time << std::endl;
+}
 
+TEST_CASE("random 50x50", "[eisenbrand_weismantel]")
+{
+    int max_A = 10;
+    int max_b = 100;
+
+    ilp::ilp_task test_task = ilp::utility::generate_task(3, 10, max_A, max_b);
+    double time = 0.0;
+    {
+        ACCUMULATE_DURATION(time);
+        auto result = ilp::eisenbrand_weismantel(test_task);
+        ilp::utility::print(test_task, result);
+    }
+
+    std::cout << time << std::endl;
 }

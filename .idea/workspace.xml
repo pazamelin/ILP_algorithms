@@ -44,13 +44,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="730da4c1-e83e-4e00-a99d-1acdfcdd0343" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/csv-plugin.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/eisenbrand_weismantel.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/eisenbrand_weismantel.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/tests/CMakeLists.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/cplex.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/tests/cplex.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/tests/eisenbrand_weismantel.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/tests/eisenbrand_weismantel.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/utility.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/tests/utility.hpp" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -94,27 +90,33 @@
     <property name="node.js.selected.package.eslint" value="(autodetect)" />
     <property name="node.js.selected.package.tslint" value="(autodetect)" />
     <property name="nodejs_package_manager_path" value="npm" />
-    <property name="settings.editor.selected.configurable" value="MTHome" />
+    <property name="settings.editor.selected.configurable" value="dynamic.analysis.tools.profiler" />
   </component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/tests" />
     </key>
   </component>
-  <component name="RunManager" selected="Catch.2x8">
-    <configuration name="2x8" type="CMakeCatchTestRunConfigurationType" factoryName="Catch Test" temporary="true" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="ILP_algorithms" TARGET_NAME="eisenbrand_weismantel" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="ILP_algorithms" RUN_TARGET_NAME="eisenbrand_weismantel" TEST_CLASS="[eisenbrand_weismantel]" TEST_METHOD="2x8" TEST_MODE="SUITE_TEST">
+  <component name="RunManager" selected="Catch.5x2">
+    <configuration name="2x8" type="CMakeCatchTestRunConfigurationType" factoryName="Catch Test" temporary="true" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="ILP_algorithms" TARGET_NAME="eisenbrand_weismantel" RUN_TARGET_PROJECT_NAME="ILP_algorithms" RUN_TARGET_NAME="eisenbrand_weismantel" TEST_CLASS="[eisenbrand_weismantel]" TEST_METHOD="2x8" TEST_MODE="SUITE_TEST">
       <method v="2">
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
         <option name="BeforeTestRunTask" enabled="true" />
       </method>
     </configuration>
-    <configuration name="5x2" type="CMakeCatchTestRunConfigurationType" factoryName="Catch Test" temporary="true" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="ILP_algorithms" TARGET_NAME="eisenbrand_weismantel" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="ILP_algorithms" RUN_TARGET_NAME="eisenbrand_weismantel" TEST_CLASS="[eisenbrand_weismantel]" TEST_METHOD="5x2" TEST_MODE="SUITE_TEST">
+    <configuration name="4x4" type="CMakeCatchTestRunConfigurationType" factoryName="Catch Test" temporary="true" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="ILP_algorithms" TARGET_NAME="eisenbrand_weismantel" RUN_TARGET_PROJECT_NAME="ILP_algorithms" RUN_TARGET_NAME="eisenbrand_weismantel" TEST_CLASS="[eisenbrand_weismantel]" TEST_METHOD="4x4" TEST_MODE="SUITE_TEST">
       <method v="2">
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
         <option name="BeforeTestRunTask" enabled="true" />
       </method>
     </configuration>
-    <configuration name="6x3" type="CMakeCatchTestRunConfigurationType" factoryName="Catch Test" temporary="true" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="ILP_algorithms" TARGET_NAME="eisenbrand_weismantel" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="ILP_algorithms" RUN_TARGET_NAME="eisenbrand_weismantel" TEST_CLASS="[eisenbrand_weismantel]" TEST_METHOD="6x3" TEST_MODE="SUITE_TEST">
+    <configuration name="5x2" type="CMakeCatchTestRunConfigurationType" factoryName="Catch Test" temporary="true" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="ILP_algorithms" TARGET_NAME="eisenbrand_weismantel" RUN_TARGET_PROJECT_NAME="ILP_algorithms" RUN_TARGET_NAME="eisenbrand_weismantel" TEST_CLASS="[eisenbrand_weismantel]" TEST_METHOD="5x2" TEST_MODE="SUITE_TEST">
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+        <option name="BeforeTestRunTask" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="6x3" type="CMakeCatchTestRunConfigurationType" factoryName="Catch Test" temporary="true" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="ILP_algorithms" TARGET_NAME="eisenbrand_weismantel" RUN_TARGET_PROJECT_NAME="ILP_algorithms" RUN_TARGET_NAME="eisenbrand_weismantel" TEST_CLASS="[eisenbrand_weismantel]" TEST_METHOD="6x3" TEST_MODE="SUITE_TEST">
       <method v="2">
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
         <option name="BeforeTestRunTask" enabled="true" />
@@ -126,13 +128,7 @@
         <option name="BeforeTestRunTask" enabled="true" />
       </method>
     </configuration>
-    <configuration name="level_1" type="CMakeCatchTestRunConfigurationType" factoryName="Catch Test" temporary="true" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="ILP_algorithms" TARGET_NAME="random" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="ILP_algorithms" RUN_TARGET_NAME="random" TEST_CLASS="[random]" TEST_METHOD="level_1" TEST_MODE="SUITE_TEST">
-      <method v="2">
-        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
-        <option name="BeforeTestRunTask" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="small" type="CMakeCatchTestRunConfigurationType" factoryName="Catch Test" temporary="true" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="ILP_algorithms" TARGET_NAME="random" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="ILP_algorithms" RUN_TARGET_NAME="random" TEST_CLASS="[random]" TEST_METHOD="small" TEST_MODE="SUITE_TEST">
+    <configuration name="random 50x50" type="CMakeCatchTestRunConfigurationType" factoryName="Catch Test" temporary="true" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="ILP_algorithms" TARGET_NAME="eisenbrand_weismantel" RUN_TARGET_PROJECT_NAME="ILP_algorithms" RUN_TARGET_NAME="eisenbrand_weismantel" TEST_CLASS="[eisenbrand_weismantel]" TEST_METHOD="random 50x50" TEST_MODE="SUITE_TEST">
       <method v="2">
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
         <option name="BeforeTestRunTask" enabled="true" />
@@ -294,17 +290,11 @@
         <option name="BeforeTestRunTask" enabled="true" />
       </method>
     </configuration>
-    <configuration default="true" type="GradleAppRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true">
-      <method v="2">
-        <option name="com.jetbrains.cidr.cpp.gradle.execution.GradleNativeBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
-      </method>
-    </configuration>
     <list>
       <item itemvalue="Catch.cplex" />
-      <item itemvalue="Catch.6x3" />
+      <item itemvalue="Catch.4x4" />
       <item itemvalue="Catch.5x2" />
-      <item itemvalue="Catch.small" />
-      <item itemvalue="Catch.level_1" />
+      <item itemvalue="Catch.6x3" />
       <item itemvalue="Catch.2x8" />
       <item itemvalue="CMake Application.Continuous" />
       <item itemvalue="CMake Application.ContinuousBuild" />
@@ -336,14 +326,15 @@
       <item itemvalue="CMake Application.NightlyUpdate" />
       <item itemvalue="CMake Application.libilp" />
       <item itemvalue="CTest Application.All CTest" />
+      <item itemvalue="Catch.random 50x50" />
     </list>
     <recent_temporary>
       <list>
-        <item itemvalue="Catch.2x8" />
-        <item itemvalue="Catch.level_1" />
-        <item itemvalue="Catch.small" />
-        <item itemvalue="Catch.6x3" />
         <item itemvalue="Catch.5x2" />
+        <item itemvalue="Catch.4x4" />
+        <item itemvalue="Catch.2x8" />
+        <item itemvalue="Catch.6x3" />
+        <item itemvalue="Catch.random 50x50" />
       </list>
     </recent_temporary>
   </component>
@@ -381,7 +372,9 @@
       <workItem from="1620818661285" duration="492000" />
       <workItem from="1620821156977" duration="2539000" />
       <workItem from="1620829105913" duration="1218000" />
-      <workItem from="1620847233784" duration="7488000" />
+      <workItem from="1620847233784" duration="8181000" />
+      <workItem from="1620855722247" duration="1269000" />
+      <workItem from="1620857968309" duration="1331000" />
     </task>
     <servers />
   </component>
