@@ -9,7 +9,6 @@
 #include <boost/graph/properties.hpp>
 #include <boost/property_map/property_map.hpp>
 #include <boost/graph/named_function_params.hpp>
-#include <boost/graph/dijkstra_shortest_paths.hpp>
 #include <boost/graph/bellman_ford_shortest_paths.hpp>
 
 namespace ilp
@@ -129,8 +128,14 @@ namespace ilp
         {
             ilp::detail::debug_log("feasible");
 
-            result.is_bounded = ilp::detail::bellman_ford(graph.start,
-                                                          graph.m_base);
+/*            result.is_bounded = ilp::detail::bellman_ford(graph.start,
+                                                          graph.m_base);*/
+
+            result.is_bounded  = bellman_ford_shortest_paths(graph.m_base,
+                                        num_vertices(graph.m_base),
+                                        predecessor_map(get(&VertexProperty::predecessor, graph.m_base))
+                                                .distance_map(get(&VertexProperty::distance, graph.m_base))
+                                                .weight_map(get(&EdgeProperty::weight, graph.m_base)));
 
             if (result.is_bounded)
             {

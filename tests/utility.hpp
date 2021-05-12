@@ -4,9 +4,13 @@
 #include <ilp/ilp_task.hpp>
 
 #include <vector>
+#include <iostream>
+#include <chrono>
+#include <optional>
+#include <string>
+#include <sstream>
 #include <random>
 #include <limits>
-#include <iostream>
 
 #define SEED RAND
 #define PRINT_SEED 0
@@ -94,7 +98,34 @@ namespace ilp::utility
         return true;
     }
 
+    class AccumulateDuration
+    {
+    public:
+        explicit AccumulateDuration(double& accumulator)
+                : accumulator{accumulator}, start{std::chrono::steady_clock::now()}
+        { }
+
+        ~AccumulateDuration()
+        {
+            auto finish = std::chrono::steady_clock::now();
+            std::chrono::duration<double> duration = finish - start;
+            accumulator += duration.count();
+        }
+
+    private:
+        double& accumulator;
+        std::chrono::steady_clock::time_point start;
+    };
+
 } // ilp::utility
+
+#ifndef UNIQ_ID
+#define UNIQ_ID_IMPL(lineno) _a_local_var_##lineno
+#define UNIQ_ID(lineno) UNIQ_ID_IMPL(lineno)
+#endif
+
+#define ACCUMULATE_DURATION(accumulator) \
+    ilp::utility::AccumulateDuration UNIQ_ID(__LINE__){accumulator};
 
 
 #endif // GENERATOR_HPP

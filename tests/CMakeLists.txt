@@ -8,7 +8,7 @@ FetchContent_MakeAvailable(catch)
 
 set(CMAKE_MODULE_PATH               "${PROJECT_SOURCE_DIR}/cmake")
 set(CMAKE_CXX_FLAGS                 "${CMAKE_CXX_FLAGS} -std=c++17 -DIL_STD -m64 -Wall -Werror")
-set(CMAKE_CXX_FLAGS_DEBUG           "${CMAKE_CXX_FLAGS_DEBUG} -Og -ggdb")
+set(CMAKE_CXX_FLAGS_DEBUG           "${CMAKE_CXX_FLAGS_DEBUG} -DNDEBUG -O3 -flto")
 set(CMAKE_CXX_FLAGS_RELEASE         "${CMAKE_CXX_FLAGS_RELEASE} -DNDEBUG -O3 -flto")
 set(CMAKE_INCLUDE_SYSTEM_FLAG_CXX   "-isystem ")
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY  "${PROJECT_SOURCE_DIR}/build")
@@ -39,8 +39,8 @@ register_test(eisenbrand_weismantel)
 register_test(jansen_rohwedder)
 register_test(random)
 
-
-#[[find_package(Cplex)
+find_package(Cplex)
+include_directories(SYSTEM ${CPLEX_INCLUDE_DIRS})
 
 macro(register_test_CPLEX TEST_NAME)
     if(ILPLIB_BUILD_TESTS)
@@ -51,10 +51,7 @@ macro(register_test_CPLEX TEST_NAME)
         target_compile_features(${TEST_NAME} PRIVATE cxx_std_17)
 
         # Should be linked to the main library, as well as the Catch2 testing library
-        target_link_libraries(${TEST_NAME} libilp Catch2::Catch2 )
-
-        # Include CPLEX
-        target_include_directories(SYSTEM ${CPLEX_INCLUDE_DIRS})
+        target_link_libraries(${TEST_NAME} PRIVATE libilp Catch2::Catch2 )
 
         # Link CPLEX
         target_link_libraries(${TEST_NAME} PRIVATE ${CPLEX_LIBRARIES})
@@ -64,7 +61,7 @@ macro(register_test_CPLEX TEST_NAME)
         # You can also run examples and check the output, as well.
         add_test(NAME ${TEST_NAME} COMMAND ${TEST_NAME}) # Command can be a target
     endif()
-endmacro(register_test)
+endmacro(register_test_CPLEX)
 
-register_test_CPLEX(cplex)]]
+register_test_CPLEX(cplex)
 
