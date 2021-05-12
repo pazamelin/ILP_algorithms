@@ -2,7 +2,7 @@
 #include <ilp/eisenbrand_weismantel.hpp>
 #include <ilp/jansen_rohwedder.hpp>
 
-#include "generator.hpp"
+#include "utility.hpp"
 
 #define CATCH_CONFIG_MAIN
 #include <catch2/catch.hpp>

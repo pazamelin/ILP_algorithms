@@ -39,7 +39,8 @@ register_test(eisenbrand_weismantel)
 register_test(jansen_rohwedder)
 register_test(random)
 
-find_package(Cplex)
+
+#[[find_package(Cplex)
 
 macro(register_test_CPLEX TEST_NAME)
     if(ILPLIB_BUILD_TESTS)
@@ -65,5 +66,5 @@ macro(register_test_CPLEX TEST_NAME)
     endif()
 endmacro(register_test)
 
-register_test_CPLEX(cplex)
+register_test_CPLEX(cplex)]]
 

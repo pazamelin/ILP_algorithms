@@ -2,7 +2,7 @@
 #include <ilp/eisenbrand_weismantel.hpp>
 #include <ilp/jansen_rohwedder.hpp>
 
-#include "generator.hpp"
+#include "utility.hpp"
 
 #define CATCH_CONFIG_MAIN
 #include <catch2/catch.hpp>
@@ -16,11 +16,11 @@ TEST_CASE("level_0", "[random]")
 
     for (int i = 0; i < 1000; ++i)
     {
-        ilp::ilp_task task = ilp::debug::generate_task(m, n, max_A, max_b);
+        ilp::ilp_task task = ilp::utility::generate_task(m, n, max_A, max_b);
         ilp::eisenbrand_weismantel(task);
         ilp::ilp_solution solution = ilp::eisenbrand_weismantel(task);
-        std::cout << "i: " << i << "\n";        
-        print(task, solution);
+        std::cout << "i: " << i << "\n";
+        ilp::utility::print(task, solution);
     }
 }
 
@@ -33,10 +33,10 @@ TEST_CASE("level_1", "[random]")
 
     for (int i = 0; i < 100; ++i)
     {
-        ilp::ilp_task task = ilp::debug::generate_task(m, n, max_A, max_b);
+        ilp::ilp_task task = ilp::utility::generate_task(m, n, max_A, max_b);
         ilp::eisenbrand_weismantel(task);
         ilp::ilp_solution solution = ilp::eisenbrand_weismantel(task);
         std::cout << "i: " << i << "\n";
-        print(task, solution);
+        ilp::utility::print(task, solution);
     }
 }

@@ -43,6 +43,9 @@ add_subdirectory(src)
 option(ILPLIB_BUILD_TESTS "build tests executables" ON)
 message(STATUS "ILPLIB_BUILD_TESTS : ${ILPLIB_BUILD_TESTS}")
 
+option(CPLEX_ROOT_DIR "CPLEX_ROOT_DIR" "/opt/ibm/ILOG/CPLEX_Studio201")
+message(STATUS "CPLEX_ROOT_DIR : ${CPLEX_ROOT_DIR}")
+
 # Testing only available if this is the main app
 # Emergency override MODERN_CMAKE_BUILD_TESTING provided as well
 if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME OR ILPLIB_BUILD_TESTS)
