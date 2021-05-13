@@ -3,7 +3,6 @@
 
 #include "ilp_task.hpp"
 #include "digraph.hpp"
-#include "detail/dynamic_table.hpp"
 
 #include <boost/graph/adjacency_list.hpp>
 #include <boost/graph/adj_list_serialize.hpp>

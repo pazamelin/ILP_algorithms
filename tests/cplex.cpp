@@ -127,12 +127,12 @@ bool is_solution_valid(const ilp::ilp_task& task, const ilp::ilp_solution& solut
 
 TEST_CASE("level_0", "[CPLEX_TEST]")
 {
-    int m = 3;
-    int n = 20;
+    int m = 2;
+    int n = 1000;
     int max_A = 5;
-    int max_b = 10;
+    int max_b = 8;
 
-    int iterations = 1;
+    int iterations = 10;
 
     for (int i = 0; i < iterations; ++i)
     {

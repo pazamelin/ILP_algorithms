@@ -12,7 +12,7 @@
 #include <random>
 #include <limits>
 
-#define SEED 1
+#define SEED RAND
 #define PRINT_SEED 0
 
 namespace ilp::utility
@@ -39,8 +39,8 @@ namespace ilp::utility
         ilp::rvector<int> c(1, n);
 
         std::mt19937 gen(get_seed());
-        std::uniform_int_distribution<> dist_A(0, max_A);
-        std::uniform_int_distribution<> dist_b(0, max_b);
+        std::uniform_int_distribution<> dist_A(1, max_A);
+        std::uniform_int_distribution<> dist_b(3, max_b);
         std::uniform_int_distribution<> dist_c(0, 10);
 
         for (int row = 0; row < m; ++row)

@@ -11,44 +11,41 @@
 #include <boost/graph/named_function_params.hpp>
 #include <boost/graph/bellman_ford_shortest_paths.hpp>
 
+#include "../tests/utility.hpp"
+
 namespace ilp
 {
-	EWDigraph::EWDigraph(const ilp::ilp_task& ilpTask) : DigraphAdaptor{ilpTask}
-	{     
-	    detail::debug_log("building EW digraph ...");
-	}
+    EWDigraph::EWDigraph(const ilp::ilp_task& ilpTask) : DigraphAdaptor{ilpTask}
+    {
+        detail::debug_log("building EW digraph ...");
+    }
 
-	bool EWDigraph::populate_condition(const cvector<int>& b,
+    bool EWDigraph::populate_condition(const cvector<int>& b,
                                        const cvector<int>& p,
                                        int bound) const
-	{
-		{
-            detail::debug_log("populate_condition call:");
-        }
+    {
 
         double dot_product_lhs = b.dot(p);
         double dot_product_rhs = b.dot(b);
         double coeff = dot_product_lhs / dot_product_rhs;
-        cvector<double> b_cut = b.cast<double>() * std::min(coeff, 1.0);
-
+        if (coeff > 1.0)
         {
-            detail::debug_log("     checking: ", p);
-            detail::debug_log("     b offcut: ", b_cut);
+            coeff = 1.0;
         }
 
-        cvector<double> distance = b_cut - p.cast<double>();
-        auto norm = distance.lpNorm<Eigen::Infinity>();
-        bool result = (norm <= bound);
-
+        for (int i = 0; i < ilpTask.A.rows(); ++i)
         {
-            detail::debug_log("     distance: ", distance);
-            detail::debug_log("     bound:", bound);
-            result ? detail::debug_log("     OK, populating!")
-                   : detail::debug_log("     NO, out bounds.");
+            auto b_val = static_cast<double>(b(i, 0));
+            double b_val_cut = b_val * coeff;
+            double p_val = p(i, 0);
+            if (std::abs(p_val - b_val_cut) > bound)
+            {
+                return false;
+            }
         }
 
-        return result;
-	}
+        return true;
+    }
 
     void EWDigraph::populate_from(VertexDescriptor vertex,
                                   int bound)
@@ -93,8 +90,8 @@ namespace ilp
 
     void EWDigraph::populate_graph()
     {
-        const index_t m   = ilpTask.A.rows();
-        const index_t n   = ilpTask.A.cols();
+        const index_t m = ilpTask.A.rows();
+        const index_t n = ilpTask.A.cols();
         const int delta = ilpTask.A.lpNorm<Eigen::Infinity>();
         const int bound = 2 * static_cast<int>(m) * delta;
 
@@ -112,7 +109,7 @@ namespace ilp
     }
 
     ilp_solution eisenbrand_weismantel(const ilp_task& ilpTask)
-	{
+    {
         const index_t m = ilpTask.A.rows();
         const index_t n = ilpTask.A.cols();
 
@@ -120,21 +117,28 @@ namespace ilp
         result.x = cvector<int>::Zero(n, 1);
 
         ilp::EWDigraph graph{ilpTask};
-        graph.populate_graph();
+
+        {
+            LOG_DURATION("POPULATING");
+            graph.populate_graph();
+        }
+
 
         result.is_feasible = graph.is_feasible();
         if (result.is_feasible)
         {
             ilp::detail::debug_log("feasible");
 
-/*            result.is_bounded = ilp::detail::bellman_ford(graph.start,
-                                                          graph.m_base);*/
-
-            result.is_bounded  = bellman_ford_shortest_paths(graph.m_base,
-                                        num_vertices(graph.m_base),
-                                        predecessor_map(get(&VertexProperty::predecessor, graph.m_base))
-                                                .distance_map(get(&VertexProperty::distance, graph.m_base))
-                                                .weight_map(get(&EdgeProperty::weight, graph.m_base)));
+            {
+                LOG_DURATION("BELLMAN-FORD")
+                result.is_bounded = bellman_ford_shortest_paths(
+                        graph.m_base,
+                        num_vertices(graph.m_base),
+                        predecessor_map(get(&VertexProperty::predecessor, graph.m_base))
+                                .distance_map(get(&VertexProperty::distance, graph.m_base))
+                                .weight_map(get(&EdgeProperty::weight, graph.m_base))
+                );
+            }
 
             if (result.is_bounded)
             {
