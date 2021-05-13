@@ -3,7 +3,7 @@
 #include <ilp/jansen_rohwedder.hpp>
 
 #define CATCH_CONFIG_MAIN
-#include <catch2/catch.hpp>
+#include <catch.hpp>
 
 TEST_CASE("2x2", "[jansen_rohwedder]")
 {   // feasible

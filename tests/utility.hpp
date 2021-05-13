@@ -12,7 +12,7 @@
 #include <random>
 #include <limits>
 
-#define SEED RAND
+#define SEED 1
 #define PRINT_SEED 0
 
 namespace ilp::utility
@@ -81,7 +81,6 @@ namespace ilp::utility
             std::cout << "x: " << solution.x << "\n";
             std::cout << "SOLVED" << "\n";
         }
-        std::cout << "\n";
     }
 
     template <typename AnswerX>

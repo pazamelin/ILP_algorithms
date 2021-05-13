@@ -132,7 +132,7 @@ TEST_CASE("2x8", "[eisenbrand_weismantel]")
 TEST_CASE("random 50x50", "[eisenbrand_weismantel]")
 {
     int m = 3;
-    int n = 10;
+    int n = 50;
     int max_A = 10;
     int max_b = 50;
 

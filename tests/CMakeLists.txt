@@ -1,6 +1,7 @@
 set(CMAKE_MODULE_PATH               "${PROJECT_SOURCE_DIR}/cmake")
 set(CMAKE_CXX_FLAGS                 "${CMAKE_CXX_FLAGS} -std=c++17 -DIL_STD -m64 -Wall -Werror")
-set(CMAKE_CXX_FLAGS_DEBUG           "${CMAKE_CXX_FLAGS_DEBUG} -Og -ggdb")
+#set(CMAKE_CXX_FLAGS_DEBUG           "${CMAKE_CXX_FLAGS_DEBUG} -Og -ggdb")
+set(CMAKE_CXX_FLAGS_DEBUG         "${CMAKE_CXX_FLAGS_DEBUG} -DNDEBUG -O3 -flto")
 set(CMAKE_CXX_FLAGS_RELEASE         "${CMAKE_CXX_FLAGS_RELEASE} -DNDEBUG -O3 -flto")
 set(CMAKE_INCLUDE_SYSTEM_FLAG_CXX   "-isystem ")
 
@@ -41,7 +42,7 @@ find_package(Cplex)
 include_directories(SYSTEM ${CPLEX_INCLUDE_DIRS})
 
 macro(register_test_CPLEX TEST_NAME)
-    if(ILPLIB_BUILD_TESTS)
+    if(NOT CPLEX_ROOT_DIR STREQUAL "")
         # Tests need to be added as executables first
         add_executable(${TEST_NAME} ${TEST_NAME}.cpp)
 
@@ -50,6 +51,8 @@ macro(register_test_CPLEX TEST_NAME)
 
         # Should be linked to the main library, as well as the Catch2 testing library
         target_link_libraries(${TEST_NAME} PRIVATE libilp Catch2)
+
+        target_include_directories(${TEST_NAME} PRIVATE ${CPLEX_INCLUDE_DIRS})
 
         # Link CPLEX
         target_link_libraries(${TEST_NAME} PRIVATE ${CPLEX_LIBRARIES})

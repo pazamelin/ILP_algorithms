@@ -73,7 +73,8 @@ namespace ilp
         bool is_feasible = false;
         bool is_bounded = false;
         cvector<int> x;
-        int c_result;
+        int c_result = 0;
+        double time = 0;
     };
 
 } // namespace ilp
