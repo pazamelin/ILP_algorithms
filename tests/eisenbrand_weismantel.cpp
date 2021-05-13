@@ -5,7 +5,7 @@
 #include "utility.hpp"
 
 #define CATCH_CONFIG_MAIN
-#include <catch2/catch.hpp>
+#include <catch.hpp>
 
 TEST_CASE("2x2", "[eisenbrand_weismantel]")
 {   // feasible
@@ -131,16 +131,16 @@ TEST_CASE("2x8", "[eisenbrand_weismantel]")
 
 TEST_CASE("random 50x50", "[eisenbrand_weismantel]")
 {
+    int m = 3;
+    int n = 10;
     int max_A = 10;
-    int max_b = 100;
+    int max_b = 50;
 
-    ilp::ilp_task test_task = ilp::utility::generate_task(3, 10, max_A, max_b);
-    double time = 0.0;
+    ilp::ilp_task test_task = ilp::utility::generate_task(m, n, max_A, max_b);
     {
-        ACCUMULATE_DURATION(time);
+        LOG_DURATION("time");
         auto result = ilp::eisenbrand_weismantel(test_task);
         ilp::utility::print(test_task, result);
     }
 
-    std::cout << time << std::endl;
 }

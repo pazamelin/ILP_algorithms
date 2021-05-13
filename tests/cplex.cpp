@@ -17,7 +17,6 @@ ILOSTLBEGIN
 // End magic tricks
 
 
-/*
 TEST_CASE("level_0", "[CPLEX_TEST]")
 {
     // create CPLEX environment handler (PIMPL) object
@@ -30,10 +29,10 @@ TEST_CASE("level_0", "[CPLEX_TEST]")
     // 1.2 construct modeling variables
     IloNumVar x1(env, 0, 40, ILOINT);
     // 1.3 define objective function
-    IloObjective obj = IloMinimize(env, x1 + 2*x2 + 3*x3);
+//    IloObjective obj = IloMinimize(env, x1 + 2*x2 + 3*x3);
 
     // 1.4 add the objects to the model
-    model.add(IloMinimize(env, x1 + 2*x2 + 3*x3));
+//    model.add(IloMinimize(env, x1 + 2*x2 + 3*x3));
 
     // 2.1 create the object for solving the problem
     IloCplex cplex(model);
@@ -47,4 +46,3 @@ TEST_CASE("level_0", "[CPLEX_TEST]")
     // explicitly destroy the implementation object
     env.end();
 }
- */

@@ -49,5 +49,11 @@ message(STATUS "CPLEX_ROOT_DIR : ${CPLEX_ROOT_DIR}")
 # Testing only available if this is the main app
 # Emergency override MODERN_CMAKE_BUILD_TESTING provided as well
 if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME OR ILPLIB_BUILD_TESTS)
+    # Prepare "Catch" library for other executables
+    set(CATCH_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/extern/catch2)
+    add_library(Catch2 INTERFACE)
+    target_include_directories(Catch2 INTERFACE ${CATCH_INCLUDE_DIR})
+
+    # Build Tests
     add_subdirectory(tests)
 endif()
