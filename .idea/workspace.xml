@@ -47,11 +47,11 @@
     <list default="true" id="730da4c1-e83e-4e00-a99d-1acdfcdd0343" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/csv-plugin.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/csv-plugin.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/include/ilp/detail/dynamic_table.hpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/include/ilp/jansen_rohwedder.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/include/ilp/jansen_rohwedder.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/include/ilp/detail/bellman_ford.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/include/ilp/detail/bellman_ford.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/src/CMakeLists.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/eisenbrand_weismantel.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/eisenbrand_weismantel.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/tests/CMakeLists.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/tests/cplex.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/tests/cplex.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/eisenbrand_weismantel.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/tests/eisenbrand_weismantel.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/tests/utility.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/tests/utility.hpp" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -100,29 +100,24 @@
   </component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/include/ilp/detail/boost" />
       <recent name="$PROJECT_DIR$/tests" />
     </key>
   </component>
-  <component name="RunManager" selected="Catch.level_0">
-    <configuration name="2x8" type="CMakeCatchTestRunConfigurationType" factoryName="Catch Test" temporary="true" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="ILP_algorithms" TARGET_NAME="eisenbrand_weismantel" RUN_TARGET_PROJECT_NAME="ILP_algorithms" RUN_TARGET_NAME="eisenbrand_weismantel" TEST_CLASS="[eisenbrand_weismantel]" TEST_METHOD="2x8" TEST_MODE="SUITE_TEST">
+  <component name="RunManager" selected="CMake Application.cplex">
+    <configuration name="5x2" type="CMakeCatchTestRunConfigurationType" factoryName="Catch Test" temporary="true" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="ILP_algorithms" TARGET_NAME="eisenbrand_weismantel" CONFIG_NAME="Release" RUN_TARGET_PROJECT_NAME="ILP_algorithms" RUN_TARGET_NAME="eisenbrand_weismantel" TEST_CLASS="[eisenbrand_weismantel]" TEST_METHOD="5x2" TEST_MODE="SUITE_TEST">
       <method v="2">
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
         <option name="BeforeTestRunTask" enabled="true" />
       </method>
     </configuration>
-    <configuration name="5x2" type="CMakeCatchTestRunConfigurationType" factoryName="Catch Test" temporary="true" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="ILP_algorithms" TARGET_NAME="eisenbrand_weismantel" RUN_TARGET_PROJECT_NAME="ILP_algorithms" RUN_TARGET_NAME="eisenbrand_weismantel" TEST_CLASS="[eisenbrand_weismantel]" TEST_METHOD="5x2" TEST_MODE="SUITE_TEST">
+    <configuration name="EW-CPLEX" type="CMakeCatchTestRunConfigurationType" factoryName="Catch Test" singleton="false" temporary="true" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="ILP_algorithms" TARGET_NAME="cplex" CONFIG_NAME="Release" RUN_TARGET_PROJECT_NAME="ILP_algorithms" RUN_TARGET_NAME="cplex" TEST_CLASS="[profile]" TEST_METHOD="EW-CPLEX" TEST_MODE="SUITE_TEST">
       <method v="2">
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
         <option name="BeforeTestRunTask" enabled="true" />
       </method>
     </configuration>
-    <configuration name="6x3" type="CMakeCatchTestRunConfigurationType" factoryName="Catch Test" temporary="true" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="ILP_algorithms" TARGET_NAME="eisenbrand_weismantel" RUN_TARGET_PROJECT_NAME="ILP_algorithms" RUN_TARGET_NAME="eisenbrand_weismantel" TEST_CLASS="[eisenbrand_weismantel]" TEST_METHOD="6x3" TEST_MODE="SUITE_TEST">
-      <method v="2">
-        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
-        <option name="BeforeTestRunTask" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="cplex" type="CMakeCatchTestRunConfigurationType" factoryName="Catch Test" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="ILP_algorithms" TARGET_NAME="cplex" CONFIG_NAME="Release" RUN_TARGET_PROJECT_NAME="ILP_algorithms" RUN_TARGET_NAME="cplex" TEST_MODE="SUITE_TEST">
+    <configuration name="cplex" type="CMakeCatchTestRunConfigurationType" factoryName="Catch Test" singleton="false" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="ILP_algorithms" TARGET_NAME="cplex" CONFIG_NAME="Release" RUN_TARGET_PROJECT_NAME="ILP_algorithms" RUN_TARGET_NAME="cplex" TEST_MODE="SUITE_TEST">
       <method v="2">
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
         <option name="BeforeTestRunTask" enabled="true" />
@@ -134,7 +129,7 @@
         <option name="BeforeTestRunTask" enabled="true" />
       </method>
     </configuration>
-    <configuration name="random 50x50" type="CMakeCatchTestRunConfigurationType" factoryName="Catch Test" temporary="true" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="ILP_algorithms" TARGET_NAME="eisenbrand_weismantel" RUN_TARGET_PROJECT_NAME="ILP_algorithms" RUN_TARGET_NAME="eisenbrand_weismantel" TEST_CLASS="[eisenbrand_weismantel]" TEST_METHOD="random 50x50" TEST_MODE="SUITE_TEST">
+    <configuration name="random 50x50" type="CMakeCatchTestRunConfigurationType" factoryName="Catch Test" temporary="true" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="ILP_algorithms" TARGET_NAME="eisenbrand_weismantel" CONFIG_NAME="Release" RUN_TARGET_PROJECT_NAME="ILP_algorithms" RUN_TARGET_NAME="eisenbrand_weismantel" TEST_CLASS="[eisenbrand_weismantel]" TEST_METHOD="random 50x50" TEST_MODE="SUITE_TEST">
       <method v="2">
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
         <option name="BeforeTestRunTask" enabled="true" />
@@ -280,7 +275,7 @@
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
     </configuration>
-    <configuration default="true" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true">
+    <configuration name="cplex" type="CMakeRunConfiguration" factoryName="Application" temporary="true" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="ILP_algorithms" TARGET_NAME="cplex" CONFIG_NAME="Release" RUN_TARGET_PROJECT_NAME="ILP_algorithms" RUN_TARGET_NAME="cplex">
       <method v="2">
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
@@ -304,10 +299,9 @@
     <list>
       <item itemvalue="Catch.cplex" />
       <item itemvalue="Catch.5x2" />
-      <item itemvalue="Catch.6x3" />
-      <item itemvalue="Catch.2x8" />
       <item itemvalue="Catch.random 50x50" />
       <item itemvalue="Catch.level_0" />
+      <item itemvalue="Catch.EW-CPLEX" />
       <item itemvalue="CMake Application.Continuous" />
       <item itemvalue="CMake Application.ContinuousBuild" />
       <item itemvalue="CMake Application.ContinuousConfigure" />
@@ -337,15 +331,16 @@
       <item itemvalue="CMake Application.NightlyTest" />
       <item itemvalue="CMake Application.NightlyUpdate" />
       <item itemvalue="CMake Application.libilp" />
+      <item itemvalue="CMake Application.cplex" />
       <item itemvalue="CTest Application.All CTest" />
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="CMake Application.cplex" />
+        <item itemvalue="Catch.EW-CPLEX" />
         <item itemvalue="Catch.level_0" />
-        <item itemvalue="Catch.random 50x50" />
-        <item itemvalue="Catch.2x8" />
-        <item itemvalue="Catch.6x3" />
         <item itemvalue="Catch.5x2" />
+        <item itemvalue="Catch.random 50x50" />
       </list>
     </recent_temporary>
   </component>
@@ -392,7 +387,11 @@
       <workItem from="1620918074787" duration="10417000" />
       <workItem from="1620938237889" duration="599000" />
       <workItem from="1620942424853" duration="1515000" />
-      <workItem from="1620945673384" duration="2226000" />
+      <workItem from="1620945673384" duration="4922000" />
+      <workItem from="1620981619473" duration="23959000" />
+      <workItem from="1621018562590" duration="10015000" />
+      <workItem from="1621035621445" duration="2709000" />
+      <workItem from="1621083361313" duration="2501000" />
     </task>
     <servers />
   </component>
@@ -430,19 +429,24 @@
           <option name="timeStamp" value="29" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
-          <url>file://$PROJECT_DIR$/tests/cplex.cpp</url>
-          <line>114</line>
-          <option name="timeStamp" value="43" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
           <url>file://$PROJECT_DIR$/tests/eisenbrand_weismantel.cpp</url>
           <line>11</line>
           <option name="timeStamp" value="44" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
-          <url>file://$PROJECT_DIR$/src/eisenbrand_weismantel.cpp</url>
-          <line>27</line>
+          <url>file:///usr/local/include/boost/graph/bellman_ford_shortest_paths.hpp</url>
+          <line>200</line>
           <option name="timeStamp" value="45" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
+          <url>file://$PROJECT_DIR$/tests/utility.hpp</url>
+          <line>74</line>
+          <option name="timeStamp" value="46" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
+          <url>file://$PROJECT_DIR$/tests/utility.hpp</url>
+          <line>107</line>
+          <option name="timeStamp" value="47" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

@@ -4,14 +4,16 @@
 #include <ilp/ilp_task.hpp>
 #include <ilp/digraph.hpp>
 
+#include <tbb/tbb.h>
+
 namespace ilp::detail
 {
     template <typename Edge,
-              typename Graph,
-              typename DistanceCmp = std::less<int>>
+            typename Graph,
+            typename DistanceCmp = std::less<int>>
     bool relax(Edge edge_descriptor,
                Graph& graph,
-               DistanceCmp dcmp = { }
+               DistanceCmp dcmp = {}
     )
     {
         bool has_relaxed = false;
@@ -23,7 +25,7 @@ namespace ilp::detail
         auto& target = graph[target_descriptor];
         auto& edge = graph[edge_descriptor];
 
-        if ( dcmp(source.distance + edge.weight, target.distance) )
+        if (dcmp(source.distance + edge.weight, target.distance))
         {
             target.distance = source.distance + edge.weight;
             target.predecessor = source_descriptor;
@@ -34,21 +36,43 @@ namespace ilp::detail
     }
 
     template <typename Vertex,
-              typename Graph,
-              typename DistanceCmp = std::less<int>>
+            typename Graph,
+            typename DistanceCmp = std::less<int>>
     bool bellman_ford(Vertex src,
                       Graph& graph,
-                      DistanceCmp dcmp = { })
+                      DistanceCmp dcmp = {})
     {
         // assuming that vertices and weights are already initialized
-        auto edge_range = boost::edges(graph);
+        const auto& edge_range = boost::edges(graph);
 
-        for (std::size_t i = 0; i < graph.vertex_set().size(); i++)
+        const auto num_v = num_vertices(graph);
+
+        for (int i = 0; i < num_v; i++)
         {
-            // try to relax every edge
-            for (auto e_it = edge_range.first; e_it != edge_range.second; ++e_it)
+            bool at_least_one_edge_relaxed = false;
+
+            tbb::parallel_for(
+                    tbb::blocked_range<VertexDescriptor>{0, num_v},
+                    [&](const tbb::blocked_range<VertexDescriptor>& r)
+                    {
+                        for (VertexDescriptor v = r.begin(); v < r.end(); v++)
+                        {
+                            typename boost::graph_traits<BaseGraph>::out_edge_iterator ei, ei_end;
+                            for (boost::tie(ei, ei_end) = out_edges(v, graph); ei != ei_end; ++ei)
+                            {
+                                // try to relax the edge
+                                if (relax(*ei, graph, dcmp))
+                                {
+                                    at_least_one_edge_relaxed = true;
+                                }
+                            }
+                        }
+                    }
+            );
+
+            if (!at_least_one_edge_relaxed)
             {
-                relax(*e_it, graph, dcmp);
+                break;
             }
         }
 

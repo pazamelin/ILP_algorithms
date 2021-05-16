@@ -9,9 +9,12 @@
 #include <boost/graph/properties.hpp>
 #include <boost/property_map/property_map.hpp>
 #include <boost/graph/named_function_params.hpp>
-#include <boost/graph/bellman_ford_shortest_paths.hpp>
 
-#include "../tests/utility.hpp"
+// original boost header:
+//#include <boost/graph/bellman_ford_shortest_paths.hpp>
+
+// modified boost header:
+//#include "ilp/detail/boost/bellman_ford_shortest_paths.hpp"
 
 namespace ilp
 {
@@ -24,7 +27,6 @@ namespace ilp
                                        const cvector<int>& p,
                                        int bound) const
     {
-
         double dot_product_lhs = b.dot(p);
         double dot_product_rhs = b.dot(b);
         double coeff = dot_product_lhs / dot_product_rhs;
@@ -69,6 +71,11 @@ namespace ilp
                 {
                     // try to insert and get descriptor of a new or an existing vertex
                     auto[new_vertex, is_new] = this->add_vertex(current_point);
+
+                    if (new_vertex == current_vertex)
+                    {
+                        continue;
+                    }
 
                     // insert the new edge to the graph
                     this->add_edge(current_vertex,
@@ -119,18 +126,15 @@ namespace ilp
         ilp::EWDigraph graph{ilpTask};
 
         {
-            LOG_DURATION("POPULATING");
             graph.populate_graph();
         }
-
 
         result.is_feasible = graph.is_feasible();
         if (result.is_feasible)
         {
             ilp::detail::debug_log("feasible");
 
-            {
-                LOG_DURATION("BELLMAN-FORD")
+/*            {
                 result.is_bounded = bellman_ford_shortest_paths(
                         graph.m_base,
                         num_vertices(graph.m_base),
@@ -138,6 +142,11 @@ namespace ilp
                                 .distance_map(get(&VertexProperty::distance, graph.m_base))
                                 .weight_map(get(&EdgeProperty::weight, graph.m_base))
                 );
+            }*/
+
+            {
+                result.is_bounded = ilp::detail::bellman_ford(graph.start,
+                                                              graph.m_base);
             }
 
             if (result.is_bounded)

@@ -17,8 +17,10 @@ add_library(libilp ${SOURCE_LIST} ${HEADER_LIST})
 # We need this directory, and users of our library will need it too
 target_include_directories(libilp PUBLIC ../include)
 
-# This depends on (header only) boost
-target_link_libraries(libilp PRIVATE Boost::boost)
+find_package(TBB REQUIRED)
+
+# Link Boost and TBB
+target_link_libraries(libilp PRIVATE Boost::boost TBB::tbb)
 
 # All users of this library will need at least C++17
 target_compile_features(libilp PUBLIC cxx_std_17)
